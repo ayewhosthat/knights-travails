@@ -20,16 +20,21 @@ function getValidMoves(position) {
     return validMoves;
 }
 
-function knightMoves() {
+function knightMoves(startPosition) {
     const visited = [];
+    const distance = [];
     for (let i = 0; i <= BOARDHEIGHT; i++) {
         let row = [];
+        let distanceRow = [];
         for (let j = 0; j <= BOARDWIDTH; j++) {
             row.push(false);
+            distanceRow.push(0);
         }
         visited.push(row);
+        distance.push(distanceRow)
     }
-    console.log(visited);
+    
+    visited[startPosition[0]][startPosition[1]] = true;
 }
 
-knightMoves()
+knightMoves([0,0]);
