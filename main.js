@@ -19,3 +19,17 @@ function getValidMoves(position) {
     }
     return validMoves;
 }
+
+function knightMoves() {
+    const visited = [];
+    for (let i = 0; i <= BOARDHEIGHT; i++) {
+        let row = [];
+        for (let j = 0; j <= BOARDWIDTH; j++) {
+            row.push(false);
+        }
+        visited.push(row);
+    }
+    console.log(visited);
+}
+
+knightMoves()
