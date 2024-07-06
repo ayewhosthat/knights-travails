@@ -96,4 +96,3 @@ function knightMoves(startPosition, endPosition) {
         }
     }
 }
-knightMoves([3,3], [3,3]);
