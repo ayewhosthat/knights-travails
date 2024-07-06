@@ -10,7 +10,10 @@ class Deque {
         this.queue.push(item);
     }
     dequeue(item) {
-        return this.shift(item);
+        return this.queue.shift(item);
+    }
+    isEmpty() {
+        return this.queue.length === 0;
     }
 }
 
@@ -32,9 +35,16 @@ function getValidMoves(position) {
     return validMoves;
 }
 
-function knightMoves(startPosition) {
+function knightMoves(startPosition, endPosition) {
+    if (startPosition[0] === endPosition[0] && startPosition[1] === endPosition[1]) {
+        console.log('You are already at your destination!');
+        return;
+    }
+    // preprocessing
+    const parent = {};
     const visited = [];
     const distance = [];
+    const queue = new Deque();
     for (let i = 0; i <= BOARDHEIGHT; i++) {
         let row = [];
         let distanceRow = [];
@@ -47,6 +57,43 @@ function knightMoves(startPosition) {
     }
     
     visited[startPosition[0]][startPosition[1]] = true;
-}
+    let possibleMoves = getValidMoves(startPosition);
+    for (const move of possibleMoves) {
+        if (!visited[move[0]][move[1]]) {
+            queue.enqueue(move);
+            parent[move] = startPosition;
+        }
+    }
 
-knightMoves([0,0]);
+    while (!queue.isEmpty()) {
+        const move = queue.dequeue();
+        if (move[0] === endPosition[0] && move[1] === endPosition[1]) {
+            // backtracking using the parent object
+            let distance = 0;
+            let par = move;
+            let path = [];
+            path.push(move);
+            while (par !== startPosition) {
+                par = parent[par];
+                path.push(par);
+                distance++; // each edge corresponds to a step
+            }
+            path = path.reverse().join('\n'); // reversing the path since we started from the destination
+            // then worked our way up the parent object
+            console.log(`You made it in ${distance} turns! Here's your path:\n${path}`);
+            return;
+        }
+
+        visited[move[0]][move[1]] = true;
+        let validMovesAtPos = getValidMoves(move);
+        for (const validMove of validMovesAtPos) {
+            if (!visited[validMove[0]][validMove[1]]) {
+                // add square to the queue
+                queue.enqueue(validMove);
+                parent[validMove] = move; // keep track of parent node so that we can re-trace the path later on
+                visited[validMove[0]][validMove[1]] = true; // mark square as visited
+            }
+        }
+    }
+}
+knightMoves([3,3], [3,3]);
